@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# NOTE: 一括で生成したい場合、次のようにする
+# pwgen -Bs1 8 $USERNUM | xargs -Iusername bin/create_authed_user profname username
+
+if [[ $# -eq 2 ]]; then
+  profile=$1
+  username=$2
+else
+  echo 'Create an user to aws cognito user pool and authenticate them'
+  echo
+  echo "USAGE: ${0} <profile> <username>"
+  exit 1
+fi
+
+user_pool_id="ap-northeast-1_ytTcxUmGY"
+client_id="3pstk1bm7hv7lg8gjli5v0kcgm"
+password=$username
+
+create_user() {
+  aws --profile $profile cognito-idp admin-create-user \
+    --user-pool-id $user_pool_id \
+    --username "${username}" \
+    --temporary-password "${password}" \
+    --message-action SUPPRESS
+}
+
+get_auth_session() {
+  aws --profile $profile cognito-idp admin-initiate-auth \
+    --user-pool-id $user_pool_id \
+    --client-id $client_id \
+    --auth-flow ADMIN_NO_SRP_AUTH \
+    --auth-parameters \
+    USERNAME="${username}",PASSWORD="${password}" |
+    jq -r '.Session'
+}
+
+respond_new_password() {
+  aws --profile $profile cognito-idp admin-respond-to-auth-challenge \
+    --user-pool-id $user_pool_id \
+    --client-id $client_id \
+    --challenge-name NEW_PASSWORD_REQUIRED \
+    --challenge-responses NEW_PASSWORD="${password}",USERNAME="${username}" \
+    --session $1
+}
+
+create_user
+echo "User ${username} created"
+
+session=$(get_auth_session)
+echo "session is ${session}"
+
+respond_new_password $session
+echo "Password confirmed !!"

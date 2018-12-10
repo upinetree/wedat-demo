@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 2 ]]; then
+  profile=$1
+  output_path=$2
+else
+  echo 'Export invitation answers as CSV from dynamodb'
+  echo
+  echo "USAGE: ${0} <profile> <output_path>"
+  exit 1
+fi
+
+aws --profile $profile dynamodb scan --table-name WedatInvitationAnswers |
+  jq -r '["氏名", "出席", "お連れ様", "メッセージ", "備考", "回答日時"],
+    (
+      .Items |
+      sort_by(.createdAt.S) |
+      reverse[] |
+      [
+        "\(.lastName.S) \(.firstName.S)",
+        .attendance.BOOL,
+        (.additionalAttendees.SS // [] | join(", ")),
+        .message.S,
+        .note.S,
+        .createdAt.S
+      ]
+    ) |
+    @csv' >$output_path
+
+echo "csv export succeed! > ${output_path}"

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 2 ]]; then
+  profile=$1
+  username=$2
+else
+  echo 'Delete an user from the aws cognito user pool'
+  echo
+  echo "USAGE: ${0} <profile> <username>"
+  exit 1
+fi
+
+user_pool_id="ap-northeast-1_ytTcxUmGY"
+
+aws --profile $profile cognito-idp admin-delete-user \
+  --user-pool-id=$user_pool_id \
+  --username=$username

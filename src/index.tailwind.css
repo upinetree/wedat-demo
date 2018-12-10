@@ -1,0 +1,14 @@
+@tailwind preflight;
+@tailwind utilities;
+
+body {
+  background-color: #51648a;
+}
+
+a {
+  @apply text-blue no-underline;
+}
+
+a:hover {
+  @apply text-blue-darker underline;
+}

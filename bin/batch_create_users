@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 2 ]]; then
+  profile=$1
+  user_num=$2
+else
+  echo 'Create authed users to aws cognito user pool at once'
+  echo
+  echo "USAGE: ${0} <profile> <user_num>"
+  exit 1
+fi
+
+usernames=$(pwgen -Bs 8 $user_num)
+
+for username in $usernames; do
+  bin/create_authed_user $profile $username
+  echo "User ${username} created"
+done
+
+echo
+echo "Following users are successfully created:"
+echo $usernames

@@ -1,0 +1,43 @@
+const amplifyAuth = {
+  region: 'ap-northeast-1',
+  identityPoolId: '',
+  userPoolId: '',
+  userPoolWebClientId: ''
+};
+
+const amplifyAPI = {
+  endpoints: [
+    {
+      name: 'wedat',
+      endpoint: ''
+    }
+  ]
+};
+
+const amplifyVocabularies = {
+  ja: {
+    'Sign In Account': 'ようこそ！',
+    'Sign In': 'ログイン'
+  }
+};
+
+export const eventInfo = {
+  date: '2018-12-01',
+  receptionStartTime: '13:45',
+  ceremonyStartTime: '14:15',
+  partyStartTime: '15:15',
+  partyEndTime: '18:15',
+  calendarDateRange: '20181201T140000/20181201T180000',
+  title: 'リーリー＆シンシン結婚式💒',
+  location: '上野ぱんだ教会',
+  locationUrl: 'http://www.ueno-panda-live.jp/ondemand.html',
+  googleMapQuery:
+    '%E4%B8%8A%E9%87%8E%E5%8B%95%E7%89%A9%E5%9C%92%20%E3%82%B8%E3%83%A3%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E3%83%91%E3%83%B3%E3%83%80'
+};
+
+export const Copyright = {
+  author: 'Takuya Matsumoto',
+  for: "Ri Ri & Shin Shin's Wedding"
+}
+
+export default { amplifyAuth, amplifyAPI, amplifyVocabularies };
